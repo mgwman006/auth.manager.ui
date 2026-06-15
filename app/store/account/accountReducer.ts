@@ -8,20 +8,34 @@ export const accountReducer = (state: AccountState, action: AccountAction): Acco
       return { ...state, loading: true, error: null };
 
     case "FETCH_SUCCESS":
-      return { accountDetails: action.payload, loading: false, error: null };
+      return { ...state, accountDetails: action.payload, loading: false, error: null };
 
     case "FETCH_ERROR":
-      return { accountDetails: null, loading: false, error: action.payload };
+      return { ...state, accountDetails: null, loading: false, error: action.payload };
 
     case "LOGOUT":
-      return { accountDetails: null, loading: false, error: null };
+      return { ...state, accountDetails: null, loading: false, error: null };
 
-     case "APPEND_USER":
+    case "APPEND_USER":
       return { 
         ...state, 
         accountDetails: { 
           ...state.accountDetails, 
-          userDetails: action.payload 
+          token: action.payload 
+        }  as AccountDetailsDto
+      };
+    case "ADD_OUTGOING_URL":
+      return { 
+        ...state, 
+        outGoingUrl : action.outGoingUrl
+      };
+
+    case "APPEND_JWT":
+      return { 
+        ...state, 
+        accountDetails: { 
+          ...state.accountDetails, 
+          token : action.payload 
         }  as AccountDetailsDto
       };
     

@@ -3,17 +3,28 @@ import { LockOutlined, PhoneFilled, PhoneOutlined, RightOutlined, SmileOutlined,
 import { authApi } from "../../api/api";
 import { ApiError } from "../../types/types";
 import { handleApiError } from "../../utilities/error-handler";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAccount } from "../../store/account/AccountContext";
+import { useEffect } from "react";
 
 export default function()
 {
+
     const [notificationApi, contextHolder] = notification.useNotification();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const { state, dispatch } = useAccount();
+    const [searchParams] = useSearchParams();
+
+    const outGoingUrl = searchParams.get("outGoingUrl");
 
 
+    useEffect(() => {
+    dispatch({
+        type: "ADD_OUTGOING_URL",
+        outGoingUrl
+    });
+}, [outGoingUrl, dispatch]);
 
     const onFinish = async () => {
 

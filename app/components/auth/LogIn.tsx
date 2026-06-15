@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Flex, Form, Input, notification, Row, Space } fr
 import { ArrowLeftOutlined, LockOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { useAccount } from "../../store/account/AccountContext";
 import { useEffect } from "react";
-import { AccountAuthRequestDTO } from "../../types/types";
+import { AccountAuthRequestDTO, AccountAuthResponseDTO } from "../../types/types";
 import { handleApiError } from "../../utilities/error-handler";
 import { authApi } from "../../api/api";
 import { useNavigate } from "react-router";
@@ -32,8 +32,47 @@ export default function LogIn()
                 phoneNumber: state.accountDetails?.phoneNumber??"",
                 passWord: values.passWord
             };
-            await authApi.logIn(request);
-            navigate("/auth/user");
+
+            const response: AccountAuthResponseDTO = await authApi.logIn(request);
+
+            dispatch(
+            {
+                type: "APPEND_JWT",
+                payload: response.jwtToken
+            });
+           
+
+            const url = state.outGoingUrl?.trim();
+
+            if (!url) {
+                navigate("/user");
+                return;
+            }
+
+            if (url.startsWith("/")) {
+                navigate(url);
+                return;
+            }
+
+            const updatedState = {
+                ...state,
+                accountDetails: {
+                    ...state.accountDetails,
+                    token: response.jwtToken
+                }
+            };
+
+            const detail = encodeURIComponent(
+                JSON.stringify(updatedState)
+            );
+
+            
+
+            const externalUrl = url.startsWith("http")
+                ? `${url}?state=${detail}`
+                : `https://${url}?state=${detail}`;
+
+            window.location.assign(externalUrl);
             
         }
         catch(error)

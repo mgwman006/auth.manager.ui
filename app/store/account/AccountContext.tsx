@@ -21,6 +21,7 @@ const loadInitialState = (): AccountState => {
         accountDetails: parsed.accountDetails,
         loading: false,
         error: null,
+        outGoingUrl: null
       };
     }
   } 
@@ -33,6 +34,7 @@ const loadInitialState = (): AccountState => {
     accountDetails: null,
     loading: false,
     error: null,
+    outGoingUrl: null
   };
 };
 

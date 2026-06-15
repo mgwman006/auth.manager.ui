@@ -4,7 +4,7 @@ import { AccountAction, AccountAuthRequestDTO, AccountAuthResponseDTO, AccountCr
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const apiClient = axios.create({
-  baseURL: `${apiUrl}/rent-manager/v1`, 
+  baseURL: `${apiUrl}/auth-manager/v1`, 
   headers: {
     'Content-Type': 'application/json',
   } ,
@@ -74,27 +74,6 @@ export const usersApi = {
     return handleResponse(res.data);
   },
 };
-
-// export const enrollmentsApi = {
-//   enroll: async (studentId: number, sectionId: number) =>
-//   {
-//     const res = await apiClient.post<ApiResponse<Enrollment>>("/enrollments/enroll", {studentId, sectionId });
-//     return handleResponse(res.data);
-//   },
-//   deregister: async (enrollmentId:number) =>
-//   {
-//     const res = await apiClient.delete<ApiResponse<null>>(`/enrollments/${enrollmentId}/deregister`);
-//     return handleResponse(res.data);
-//   }
-// };
-
-// export const semesterApi = {
-//   getActiveSemester: async () =>
-//   {
-//     const res = await apiClient.get<ApiResponse<SemesterDto>>("/semesters");
-//     return handleResponse(res.data);
-//   }
-// };
 
 export function handleResponse<T>(response: ApiResponse<T>): T {
   if (!response.success) {

@@ -1,11 +1,11 @@
 {
-  "name": "tanteui",
+  "name": "tante-auth",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite --host --port 4173",
-    "preview": "vite preview --host --port 4173",
+    "dev": "vite --host --port 4174",
+    "preview": "vite preview --host --port 4174",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
