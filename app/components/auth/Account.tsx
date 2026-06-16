@@ -84,7 +84,7 @@ export default function()
                         <Divider />
 
                         <Form.Item>
-                            <a href="auth/register">Register now!</a>
+                            <a href="/register">Register now!</a>
                         </Form.Item>
 
                     </Form>

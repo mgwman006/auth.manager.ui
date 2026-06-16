@@ -15,8 +15,6 @@ export default function UserProfile()
     const navigate = useNavigate();
     const { state, dispatch } = useAccount();
 
-    
-    
     useEffect(() => {
         if (state?.accountDetails?.phoneNumber) 
         {
@@ -25,17 +23,49 @@ export default function UserProfile()
         }
     }, []);
 
+    // Navigate whenever userDetails is populated
+    useEffect(() => {
+        if (state?.accountDetails?.userDetails?.firstName && state?.accountDetails?.userDetails?.lastName) 
+        {
+            navigateToDestination();
+        }
+    }, [state?.accountDetails?.userDetails]);
+
     const getUserDetails = async(phoneNumber:string) => 
     {
         try
         {
-            const response = await usersApi.getByPhoneNumber(phoneNumber)
+            const response = await usersApi.getByPhoneNumber(phoneNumber);
+            console.log("User Details:", response);
             dispatch({type: "APPEND_USER",payload: response});
         }
         catch(error:any)
         {
             handleApiError(error,notificationApi);
         }
+    }
+
+    const navigateToDestination = () =>{
+
+        console.info("Navigating to destination with state:", state);
+        const url = state.outGoingUrl?.trim();
+
+        if (!url) {
+            notificationApi.warning({
+                message: "No destination URL provided.",
+                description: "Please provide a valid destination URL to navigate to.",
+            });
+            return;
+        }
+
+        if (url.startsWith("/")) {
+            navigate(url);
+            return;
+        }
+
+        const detail = encodeURIComponent(JSON.stringify(state));
+        const externalUrl = url.startsWith("http") ? `${url}?state=${detail}`: `https://${url}?state=${detail}`;
+        window.open(externalUrl, '_blank');
     }
 
     const handleCreateUser = async () =>
@@ -61,20 +91,14 @@ export default function UserProfile()
     
     return (
         <>
+            {contextHolder}
             {
-                ((state?.accountDetails?.userDetails != undefined ) && state?.accountDetails?.userDetails.firstName && state?.accountDetails?.userDetails.lastName)
-                ? 
-                (
-                    <div>
-                        <p>Navigate to Destination</p>
-                        <p>{state?.accountDetails?.userDetails.firstName}</p>
-                        <p>{state?.accountDetails?.userDetails.lastName}</p>
-                    </div>
-                    
-                ):
-                (
+                (state?.accountDetails?.userDetails == undefined ) || (state?.accountDetails?.userDetails == null ) ||
+                (state?.accountDetails?.userDetails?.firstName == "" ) || (state?.accountDetails?.userDetails?.lastName == "" ) ||
+                (state?.accountDetails?.userDetails?.firstName == undefined ) || (state?.accountDetails?.userDetails?.lastName == undefined )
+                && (
                     <div style={{ height:"100vh" }}>
-                        {contextHolder}
+                        
                         <Row
                             justify={'center'}
                             align={'middle'}

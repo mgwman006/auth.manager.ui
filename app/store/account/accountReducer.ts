@@ -21,7 +21,7 @@ export const accountReducer = (state: AccountState, action: AccountAction): Acco
         ...state, 
         accountDetails: { 
           ...state.accountDetails, 
-          token: action.payload 
+          userDetails: action.payload 
         }  as AccountDetailsDto
       };
     case "ADD_OUTGOING_URL":
