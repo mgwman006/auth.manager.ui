@@ -17,13 +17,16 @@ export default function()
     const [searchParams] = useSearchParams();
 
     const outGoingUrl = searchParams.get("outGoingUrl");
+    const phoneNumber = searchParams.get("phoneNumber");
+    form.setFieldsValue({ phoneNumber: phoneNumber || "" });
 
 
     useEffect(() => {
-    dispatch({
-        type: "ADD_OUTGOING_URL",
-        outGoingUrl
-    });
+        console.info("outGoingUrl from query params:", outGoingUrl);
+        if (outGoingUrl) { 
+            dispatch({type: "ADD_OUTGOING_URL", outGoingUrl: outGoingUrl});
+            console.info("Dispatched outGoingUrl to state:", outGoingUrl);
+        }
 }, [outGoingUrl, dispatch]);
 
     const onFinish = async () => {
