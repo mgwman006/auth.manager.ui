@@ -41,39 +41,7 @@ export default function LogIn()
                 payload: response.jwtToken
             });
            
-
-            const url = state.outGoingUrl?.trim();
-
-            if (!url) {
-                navigate("/user");
-                return;
-            }
-
-            if (url.startsWith("/")) {
-                navigate(url);
-                return;
-            }
-
-            const updatedState = {
-                ...state,
-                accountDetails: {
-                    ...state.accountDetails,
-                    token: response.jwtToken
-                }
-            };
-
-            const detail = encodeURIComponent(
-                JSON.stringify(updatedState)
-            );
-
-            
-
-            const externalUrl = url.startsWith("http")
-                ? `${url}?state=${detail}`
-                : `https://${url}?state=${detail}`;
-
-            window.location.assign(externalUrl);
-            
+            navigate("/user");
         }
         catch(error)
         {

@@ -10,7 +10,6 @@ import { handleApiError } from "../../utilities/error-handler";
 export default function Refister()
 {
     const [form] = Form.useForm();
-    const { state, dispatch } = useAccount();
     const [notificationApi, notificationContextHolder] = notification.useNotification();
     const navigate = useNavigate();
 
@@ -24,7 +23,7 @@ export default function Refister()
                 passWord: values.passWord
             };
             const response = await authApi.register(request);
-            navigate("/auth");
+            navigate("/");
             
         }
         catch(error)
@@ -76,7 +75,7 @@ export default function Refister()
                         <Divider />
 
                         <Form.Item>
-                            Already have account ? <a href="/auth">Get in!</a>
+                            Already have account ? <a href="/">Get in!</a>
                         </Form.Item>
 
                     </Form>

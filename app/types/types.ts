@@ -44,7 +44,7 @@ export type AccountAction =
   | { type: "FETCH_SUCCESS"; payload: AccountDetailsDto }
   | { type: "FETCH_ERROR"; payload: string }
   | { type: "LOGOUT" }
-  | { type: "APPEND_USER"; payload: string }
+  | { type: "APPEND_USER"; payload: UserDetailsDTO }
   | { type: "APPEND_JWT"; payload: string }
   | { type: "ADD_OUTGOING_URL"; outGoingUrl : string | null };
 
