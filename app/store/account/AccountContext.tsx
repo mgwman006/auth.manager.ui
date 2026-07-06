@@ -44,16 +44,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     try 
     {
-      if(state.accountDetails || state.outGoingUrl)
-      {
-        localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify(state));
-      }
+      localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify(state));
     } 
     catch (e) 
     {
       console.error("Failed to save state", e);
     }
-  }, [state.accountDetails, state.outGoingUrl]);
+  }, [state]);
 
   const value = useMemo(() => {
     return { state, dispatch };
