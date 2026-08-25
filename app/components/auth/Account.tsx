@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAccount } from "../../store/account/AccountContext";
 import { useEffect } from "react";
 
-export default function()
+export default function Account()
 {
 
     const [notificationApi, contextHolder] = notification.useNotification();
@@ -27,7 +27,7 @@ export default function()
             dispatch({type: "ADD_OUTGOING_URL", outGoingUrl: outGoingUrl});
             console.info("Dispatched outGoingUrl to state:", outGoingUrl);
         }
-}, [outGoingUrl, dispatch]);
+    }, [outGoingUrl, dispatch]);
 
     const onFinish = async () => {
 
