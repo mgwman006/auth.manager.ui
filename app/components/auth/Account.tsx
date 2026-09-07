@@ -1,13 +1,13 @@
-import { Button, Checkbox, Col, Divider, Flex, Form, Input, notification, Row } from "antd";
-import { LockOutlined, PhoneFilled, PhoneOutlined, RightOutlined, SmileOutlined, UserOutlined}from "@ant-design/icons";
+import { Button, Checkbox, Col, Divider, Flex, Form, Input, notification, Row, Select, Space, Spin } from "antd";
+import { LockOutlined, PhoneFilled, PhoneOutlined, PhoneTwoTone, RightOutlined, SmileOutlined, UserOutlined}from "@ant-design/icons";
 import { authApi } from "../../api/api";
 import { ApiError } from "../../types/types";
 import { handleApiError } from "../../utilities/error-handler";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAccount } from "../../store/account/AccountContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function()
+export default function Account()
 {
 
     const [notificationApi, contextHolder] = notification.useNotification();
@@ -15,6 +15,7 @@ export default function()
     const navigate = useNavigate();
     const { state, dispatch } = useAccount();
     const [searchParams] = useSearchParams();
+    const [loading, setLoading] = useState(false);
 
     const outGoingUrl = searchParams.get("outGoingUrl");
     const phoneNumber = searchParams.get("phoneNumber");
@@ -27,10 +28,10 @@ export default function()
             dispatch({type: "ADD_OUTGOING_URL", outGoingUrl: outGoingUrl});
             console.info("Dispatched outGoingUrl to state:", outGoingUrl);
         }
-}, [outGoingUrl, dispatch]);
+    }, [outGoingUrl, dispatch]);
 
     const onFinish = async () => {
-
+        setLoading(true);
         dispatch({ type: "FETCH_START" });
         try 
         {
@@ -42,6 +43,10 @@ export default function()
         catch (error:any) 
         {
             handleApiError(error,notificationApi)
+        }
+        finally
+        {
+            setLoading(false);
         }
     };
 
@@ -74,13 +79,28 @@ export default function()
                         <Form.Item
                             name="phoneNumber"
                             label="Enter your phone number"
-                            rules={[{ required: true, message: 'Please input your phoneNumber!' }]}
+                            rules={[
+                                        {
+                                          required: true,
+                                          message: "Please enter the tenant's phone number",
+                                        },
+                                        {
+                                          pattern: /^[0]\d{9}$/,
+                                          message: "Enter a valid Tanzanian phone number",
+                                        },
+                                    ]}
                         >
-                            <Input prefix={<PhoneOutlined />} placeholder="Phone Number" />
+                                <Input
+                                    prefix={<PhoneOutlined />}
+                                    placeholder="0712345678"
+                                    size="large"
+                                    maxLength={10}
+                                />
+
                         </Form.Item>
                         <Form.Item>
-                            <Button block type="primary" htmlType="submit">
-                                Next <RightOutlined/>
+                            <Button block type="primary" htmlType="submit" disabled={loading}>
+                                {loading ? <Spin /> : <>Next <RightOutlined /></>}
                             </Button>
                         </Form.Item>
 

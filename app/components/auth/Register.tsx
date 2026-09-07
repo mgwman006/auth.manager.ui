@@ -1,20 +1,23 @@
-import { Button, Col, Divider, Form, Input, notification, Row, Space } from "antd";
+import { Button, Col, Divider, Form, Input, notification, Row, Space, Spin } from "antd";
 import { ArrowLeftOutlined, LockOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { useAccount } from "../../store/account/AccountContext";
 import { useNavigate } from "react-router-dom";
 import { AccountCreateDto } from "../../types/types";
 import { authApi } from "../../api/api";
 import { handleApiError } from "../../utilities/error-handler";
+import { useState } from "react";
 
 
 export default function Refister()
 {
     const [form] = Form.useForm();
     const [notificationApi, notificationContextHolder] = notification.useNotification();
+    const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async () =>
     {
+        setLoading(true);
         const values = form.getFieldsValue();
         try
         {
@@ -29,6 +32,10 @@ export default function Refister()
         catch(error)
         {
             handleApiError(error,notificationApi);
+        }
+        finally
+        {
+            setLoading(false);
         }
     }
     
@@ -54,9 +61,25 @@ export default function Refister()
                     >
                         <Form.Item
                             name="phoneNumber"
-                            rules={[{ required: true, message: 'Please input your Phone Number!' }]}
+                            label="Enter your phone number"
+                            rules={[
+                                        {
+                                          required: true,
+                                          message: "Please enter the tenant's phone number",
+                                        },
+                                        {
+                                          pattern: /^[0]\d{9}$/,
+                                          message: "Invalid Phone Number",
+                                        },
+                                    ]}
                         >
-                            <Input prefix={<PhoneOutlined />}  placeholder="Phone Number"/>
+                                <Input
+                                    prefix={<PhoneOutlined />}
+                                    placeholder="0712345678"
+                                    size="large"
+                                    maxLength={10}
+                                />
+
                         </Form.Item>
 
                         <Form.Item
@@ -67,8 +90,16 @@ export default function Refister()
                         </Form.Item>
 
                         <Form.Item>
-                            <Button block type="primary" htmlType="submit">
-                                Register
+                            <Button block type="primary" htmlType="submit" disabled={loading}>
+                                {
+                                    loading ? (
+                                        <Spin />
+                                    ) :
+                                    (
+                                        "Register"
+                                    )
+                                }
+                                
                             </Button>
                         </Form.Item>
                         

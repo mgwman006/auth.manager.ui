@@ -1,7 +1,7 @@
-import { Button, Checkbox, Col, Flex, Form, Input, notification, Row, Space } from "antd";
+import { Button, Checkbox, Col, Flex, Form, Input, notification, Row, Space, Spin } from "antd";
 import { ArrowLeftOutlined, LockOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { useAccount } from "../../store/account/AccountContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AccountAuthRequestDTO, AccountAuthResponseDTO } from "../../types/types";
 import { handleApiError } from "../../utilities/error-handler";
 import { authApi } from "../../api/api";
@@ -14,6 +14,8 @@ export default function LogIn()
     const { state, dispatch } = useAccount();
     const [notificationApi, notificationContextHolder] = notification.useNotification();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
 
 
     useEffect(() => {
@@ -25,6 +27,7 @@ export default function LogIn()
 
     const handleLogIn = async () =>
     {
+        setLoading(true);
         const values = form.getFieldsValue();
         try
         {
@@ -46,6 +49,10 @@ export default function LogIn()
         catch(error)
         {
             handleApiError(error,notificationApi);
+        }
+        finally
+        {
+            setLoading(false);
         }
         
     }
@@ -90,8 +97,16 @@ export default function LogIn()
                         </Form.Item> */}
 
                         <Form.Item>
-                            <Button block type="primary" htmlType="submit">
-                            Log in
+                            <Button block type="primary" htmlType="submit" disabled={loading}>
+                                {
+                                    loading ? (
+                                        <Spin />
+                                    ):
+                                    (
+                                        <>Log In</>
+
+                                    )
+                                }
                             </Button>
                         </Form.Item>
 
