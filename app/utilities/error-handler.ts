@@ -2,35 +2,16 @@ import { NotificationInstance } from "antd/es/notification/interface";
 import { ApiError } from "../types/types";
 
 
+
 export function handleApiError(error: unknown, notificationApi:NotificationInstance) 
 {
-  if (!(error instanceof ApiError)) 
-  {
-    notificationApi.error({
-        message:"Error",
-        description:"Something went wrong"
-    });
-    return;
-  }
-
-  if (typeof error.details === "object" && error.details !== null) 
-  {
-    Object.entries(error.details).forEach(([field, message]) => 
-        {
-            notificationApi.error(
-            {
-                message:`${field} error`,
-                description:message
-            }
-        );
-        }
-    );
-  } 
-  else 
-  {
-    notificationApi.error({
-        message:error.message,
-        description:error.details
-    });
-  }
+  const apiError = error as ApiError;
+  notificationApi.error({
+      message: apiError.message ?? "Failed to accept invitation",
+      description: apiError.details
+          ? typeof apiError.details === "string"
+              ? apiError.details
+              : JSON.stringify(apiError.details)
+          : "The invitation could not be accepted.",
+  });
 }
