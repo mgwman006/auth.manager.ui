@@ -19,7 +19,7 @@ export default function Account()
 
     const outGoingUrl = searchParams.get("outGoingUrl");
     const phoneNumber = searchParams.get("phoneNumber");
-    form.setFieldsValue({ phoneNumber: phoneNumber || "" });
+    form.setFieldsValue({ phoneNumber: phoneNumber ?? "" });
 
 
     useEffect(() => {

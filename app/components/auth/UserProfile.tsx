@@ -38,12 +38,12 @@ export default function UserProfile()
         try
         {
             const response = await usersApi.getByPhoneNumber(phoneNumber);
-            console.log("User Details:", response);
             dispatch({type: "APPEND_USER",payload: response});
         }
         catch(error:any)
         {
-            handleApiError(error,notificationApi);
+            console.error("Error fetching user details:", error);
+            //handleApiError(error,notificationApi);
         }
     }
 
@@ -67,7 +67,7 @@ export default function UserProfile()
 
         const detail = encodeURIComponent(JSON.stringify(state));
         const externalUrl = url.startsWith("http") ? `${url}?state=${detail}`: `https://${url}?state=${detail}`;
-        window.open(externalUrl, '_blank');
+        window.location.href = externalUrl;
     }
 
     const handleCreateUser = async () =>

@@ -10,35 +10,41 @@ export const apiClient = axios.create({
   } ,
 });
 
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response) {
-      const { message, data, statusCode } = error.response.data;
+    if (axios.isAxiosError(error) && error.response) {
+      // An HTTP response is accessible to JavaScript.
+      const body = error.response.data;
 
       return Promise.reject(
         new ApiError({
-          message: message ?? "SERVER_ERROR",
-          data: data ?? null,
-          statusCode: statusCode ?? error.response.status,
+          message: body?.message ?? "SERVER_ERROR",
+          data: body?.data ?? null,
+          statusCode: body?.statusCode ?? error.response.status,
         })
       );
     }
 
-    if (error.request) {
+    if (axios.isAxiosError(error) && error.request) {
+      // No HTTP response is accessible to JavaScript.
       return Promise.reject(
         new ApiError({
           message: "NETWORK_ERROR",
-          data: "No response from server",
+          data: error.message,
           statusCode: 0,
         })
       );
     }
 
+    // Error occurred while setting up the request.
     return Promise.reject(
       new ApiError({
         message: "CLIENT_ERROR",
-        data: "Unexpected error occurred",
+        data: error instanceof Error
+          ? error.message
+          : "Unexpected error occurred",
         statusCode: 0,
       })
     );

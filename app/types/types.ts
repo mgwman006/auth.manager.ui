@@ -29,6 +29,15 @@ export class ApiError extends Error {
     this.statusCode =values. statusCode;
     this.details = values.data;
   }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      statusCode: this.statusCode,
+      details: this.details,
+    };
+  }
 }
 
 
